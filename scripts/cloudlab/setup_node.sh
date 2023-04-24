@@ -39,6 +39,13 @@ if [ "$SANDBOX" != "gvisor" ] && [ "$SANDBOX" != "firecracker" ] && [ "$SANDBOX"
     exit 1
 fi
 
+echo "Have you set http_proxy and https_proxy: y or n: "
+read VAR
+if [ $VAR != "y" ]
+then
+  exit 0
+fi
+
 # $SCRIPTS/utils/disable_auto_updates.sh
 $SCRIPTS/setup_system.sh
 

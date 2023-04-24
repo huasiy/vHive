@@ -41,12 +41,14 @@ DST=/usr/local/bin
 for BINARY in firecracker jailer containerd-shim-aws-firecracker firecracker-containerd firecracker-ctr
 do
   sudo cp $BINS/$BINARY $DST
+  sudo chmod +x $DST/$BINARY
 done
 
 # rootfs image
 sudo cp $BINS/default-rootfs.img /var/lib/firecracker-containerd/runtime/
 # kernel image
-sudo curl -fsSL -o /var/lib/firecracker-containerd/runtime/hello-vmlinux.bin https://s3.amazonaws.com/spec.ccfc.min/img/hello/kernel/hello-vmlinux.bin
+wget https://s3.amazonaws.com/spec.ccfc.min/img/hello/kernel/hello-vmlinux.bin
+sudo mv hello-vmlinux.bin /var/lib/firecracker-containerd/runtime/
 
 sudo cp $CONFIGS/config.toml /etc/firecracker-containerd/
 

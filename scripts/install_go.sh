@@ -27,10 +27,12 @@ set -ex
 sudo apt update >> /dev/null
 sudo apt -y install wget >> /dev/null
 
-wget --continue --quiet https://golang.org/dl/go1.18.linux-amd64.tar.gz
+wget  https://golang.org/dl/go1.18.linux-amd64.tar.gz
 
 sudo tar -C /usr/local -xzf go1.18.linux-amd64.tar.gz
 
 export PATH=$PATH:/usr/local/go/bin
 
 sudo sh -c  "echo 'export PATH=\$PATH:/usr/local/go/bin' >> /etc/profile"
+source /etc/profile
+go env -w  GOPROXY=https://goproxy.cn,direct
