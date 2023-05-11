@@ -1,14 +1,16 @@
 # vHive local registry guide
 
 To avoid bottlenecks, it is possible to use a local registry to store images. This registry is reachable at *docker-registry.registry.svc.cluster.local:5000*.
-
 ## Pulling images to the local registry
+1. Run skopeo container in a pod
 
-1. Create a txt file containing the images that need to be pulled to the local registry
+   ` kubectl apply -f configs/registry/skopeo.yaml`
+2. Execute copy command in pod skopeo
 
-2. Pull the images to the local registry. For docker the following command can be used
-
-   `go run examples/registry/populate_registry.go -imageFile images.txt -source docker://docker.io`
+   Example:
+   ```bash
+   kubectl exec skopeo -- skopeo copy docker://docker.io/vhiveease/helloworld:var_workload docker://docker-registry.registry.svc.cluster.local:5000/vhiveease/helloworld:var_workload --dest-tls-verify=false
+   ```
 
 ## Using the local registry
 
