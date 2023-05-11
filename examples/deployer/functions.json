@@ -2,18 +2,13 @@
     "functions": [
         {
             "name": "helloworld",
-            "file": "helloworld.yaml",
+            "file": "helloworld_local.yaml",
             "count": 1
         },
         {
             "name": "pyaes",
-            "file": "pyaes.yaml",
+            "file": "pyaes_local.yaml",
             "count": 2
-        },
-        {
-            "name": "rnn-serving",
-            "file": "rnn_serving.yaml",
-            "count": 3
         }
     ]
 }
