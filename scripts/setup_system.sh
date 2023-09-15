@@ -42,6 +42,7 @@ sudo apt-get -y install iproute2 >> /dev/null
 sudo apt-get -y install nftables >> /dev/null
 sudo apt-get -y install curl >> /dev/null
 sudo apt-get -y install ca-certificates >> /dev/null
+sudo apt-get -y install stress-ng >> /dev/null
 
 sudo add-apt-repository -y universe >> /dev/null
 

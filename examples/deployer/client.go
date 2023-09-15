@@ -128,6 +128,8 @@ func deployFunction(funcName, filePath string) {
 		filePath,
 		"--concurrency-target",
 		"1",
+		"--scale-max",
+		"20",
 	)
 	stdoutStderr, err := cmd.CombinedOutput()
 	if err != nil {

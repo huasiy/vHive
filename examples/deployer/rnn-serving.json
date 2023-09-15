@@ -1,0 +1,9 @@
+{
+    "functions": [
+        {
+            "name": "rnn-serving",
+            "file": "rnn_serving.yaml",
+            "count": 0
+        }
+    ]
+}
