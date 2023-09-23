@@ -381,8 +381,8 @@ func (o *Orchestrator) getVMConfig(vm *misc.VM) *proto.CreateVMRequest {
 		TimeoutSeconds: 100,
 		KernelArgs:     kernelArgs,
 		MachineCfg: &proto.FirecrackerMachineConfiguration{
-			VcpuCount:  2,
-			MemSizeMib: 16384,
+			VcpuCount:  1,
+			MemSizeMib: 256,
 		},
 		NetworkInterfaces: []*proto.FirecrackerNetworkInterface{{
 			StaticConfig: &proto.StaticNetworkConfiguration{
