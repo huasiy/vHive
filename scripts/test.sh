@@ -8,62 +8,42 @@ source /etc/profile && go build
 popd
 mkdir ../result
 
-func=helloworld.json
-i=3
-kn service delete --all
 # Deploy functions
-j=`expr $i - 1`
-sed -i "s@\"count\": ${j}@\"count\": ${i}@g" ../examples/deployer/$func
+kn service delete --all
+func=helloworld.json
+sed -i 's/\"count\".*/\"count\": 1/' ../examples/deployer/$func
 pushd ../
 pushd ./examples/deployer
 cp $func functions.json
 popd
 ./examples/deployer/deployer
 popd
+
 # Invoke
-sleep 30
+i=1
 pushd ../
-for j in $(seq 1 20)
+# Message number
+for j in 1 2 4 8 16 32 64
 do
-    ./examples/invoker/invoker --wait 30 --time 1 --allreq $j
-    mv rps*.csv result/${func}_${i}_${j}.csv
-    # wait pods to be terminated
-    sleep 180
+    # limit the max size of function instance
+    kn service update helloworld-0 --scale-max $j
+    # Repeat 
+    for k in $(seq 1 5)
+    do
+        # wait pods to be terminated
+        while [ $(kubectl get pods 2>/dev/null | wc -l) -ne 0 ];
+        do
+            sleep 5;
+        done
+        sleep 15
+        # invoke
+        ./examples/invoker/invoker --wait 20 --time 1 --allreq $j
+        mv rps*.csv result/${func}_${i}_${j}_$[k].csv
+    done
     # flush os page cache
-    timeout 90 stress-ng --vm-bytes $(awk '/MemAvailable/{printf "%d\n", $2 * 0.95;}' < /proc/meminfo)k --vm-keep -m 1
-    sleep 10
+    sleep 2
+    sudo bash /tmp/sss
+    sleep 2
 done
 popd
-kn service delete --all
 
-for func in pyaes.json rnn-serving.json
-do
-    for i in $(seq 1 3)
-    do
-        kn service delete --all
-        # Deploy functions
-        j=`expr $i - 1`
-        sed -i "s@\"count\": ${j}@\"count\": ${i}@g" ../examples/deployer/$func
-        pushd ../
-        pushd ./examples/deployer
-        cp $func functions.json
-        popd
-        ./examples/deployer/deployer
-        popd
-        # Invoke
-        sleep 30
-        pushd ../
-        for j in $(seq 1 20)
-        do
-            ./examples/invoker/invoker --wait 30 --time 1 --allreq $j
-            mv rps*.csv result/${func}_${i}_${j}.csv
-            # wait pods to be terminated
-            sleep 180
-            # flush os page cache
-            timeout 90 stress-ng --vm-bytes $(awk '/MemAvailable/{printf "%d\n", $2 * 0.95;}' < /proc/meminfo)k --vm-keep -m 1
-            sleep 10
-        done
-        popd
-        kn service delete --all
-    done
-done
