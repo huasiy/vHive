@@ -225,7 +225,9 @@ func (o *Orchestrator) StartVMWithEnvironment(ctx context.Context, vmID, imageNa
 	}
 
 	logger.Debug("Successfully started a VM")
-
+	for k, v := range startVMMetric.MetricMap {
+		logger.Info("StartVMMetric key:", k, " value:", v)
+	}
 	return &StartVMResponse{GuestIP: vm.Ni.PrimaryAddress}, startVMMetric, nil
 }
 
@@ -458,6 +460,7 @@ func (o *Orchestrator) ResumeVM(ctx context.Context, vmID string) (*metrics.Metr
 		return nil, err
 	}
 	resumeVMMetric.MetricMap[metrics.FcResume] = metrics.ToUS(time.Since(tStart))
+	fmt.Println("fcResume ", time.Since(tStart))
 
 	return resumeVMMetric, nil
 }
@@ -529,6 +532,7 @@ func (o *Orchestrator) LoadSnapshot(ctx context.Context, vmID string) (*metrics.
 	<-loadDone
 
 	loadSnapshotMetric.MetricMap[metrics.LoadVMM] = metrics.ToUS(time.Since(tStart))
+	fmt.Println("loadVMM ", time.Since(tStart))
 
 	if loadErr != nil || activateErr != nil {
 		multierr := multierror.Of(loadErr, activateErr)

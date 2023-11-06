@@ -26,6 +26,7 @@ import (
 	"context"
 	"errors"
 	"sync"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/vhive-serverless/vhive/cri"
@@ -81,9 +82,17 @@ func (s *FirecrackerService) CreateContainer(ctx context.Context, r *criapi.Crea
 	containerName := config.GetMetadata().GetName()
 
 	if containerName == userContainerName {
+		start := time.Now()
+		defer func() {
+			log.Info("Create user container ", time.Since(start))
+		}()
 		return s.createUserContainer(ctx, r)
 	}
 	if containerName == queueProxyName {
+		start := time.Now()
+		defer func() {
+			log.Info("Create queue proxy ", time.Since(start))
+		}()
 		return s.createQueueProxy(ctx, r)
 	}
 

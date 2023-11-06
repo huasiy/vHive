@@ -193,6 +193,7 @@ func (m *MemoryManager) FetchState(vmID string) error {
 		err = state.fetchState()
 		if state.metricsModeOn {
 			state.currentMetric.MetricMap[fetchStateMetric] = metrics.ToUS(time.Since(tStart))
+			logger.Info("FetchState ", state.currentMetric.MetricMap[fetchStateMetric])
 		}
 	}
 
