@@ -1,0 +1,44 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  namespace: default
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/target: "1"
+        autoscaling.knative.dev/target-utilization-percentage: "100"
+        autoscaling.knative.dev/target-burst-capacity: "1"
+        #autoscaling.knative.dev/window: "300s"
+    spec:
+      containerConcurrency: 1
+      terminationGracePeriodSeconds: 600
+      timeoutSeconds: 600
+      containers:
+        - image: docker.io/hisy/pixels:v27
+          ImagePullPolicy: IfNotPresent
+          ports:
+            - name: h2c # For GRPC support
+              containerPort: 50051
+          readinessProbe:
+            tcpSocket:
+              port: 50051 # you can also check on a different port than the containerPort (traffic-port)
+              #path: "/health"
+          livenessProbe:
+            tcpSocket:
+              port: 50051
+          env:
+            - name: PROFILING_ENABLED
+              value: "true"
+            - name: PROFILING_EVENT
+              value: "wall,alloc,lock"
+            - name: FTP_HOST
+              value: "10.168.4.2"
+            - name: FTP_PORT
+              value: "21"
+            - name: FTP_USERNAME
+              value: "pixelsftp"
+            - name: FTP_PASSWORD
+              value: "pixelsftp"
+            - name: FTP_WORKDIR
+              value: "/files"

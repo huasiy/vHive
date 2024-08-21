@@ -98,7 +98,7 @@ EOF'`
 func DeployKubernetes() error {
 
 	utils.WaitPrintf("Deploying Kubernetes(version %s)", configs.Kube.K8sVersion)
-	masterNodeIp, iperr := utils.ExecShellCmd(`ip route | awk '{print $(NF)}' | awk '/^10\..*/'`)
+	masterNodeIp, iperr := utils.ExecShellCmd(`ifconfig $(sudo route | grep default | tr -s ' ' | cut -d ' ' -f 8) | grep inet | awk 'NR==1{print $2}'`)
 	if iperr != nil {
 		return iperr
 	}

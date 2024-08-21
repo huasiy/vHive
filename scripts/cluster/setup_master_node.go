@@ -60,10 +60,10 @@ func SetupMasterNode(stockContainerd string) error {
 		return err
 	}
 
-	err = InstallLocalClusterRegistry()
-	if err != nil {
-		return err
-	}
+	//err = InstallLocalClusterRegistry()
+	//if err != nil {
+	//	return err
+	//}
 
 	err = ConfigureMagicDNS()
 	if err != nil {
@@ -81,26 +81,26 @@ func SetupMasterNode(stockContainerd string) error {
 		return err
 	}
 
-	err = InstallKnativeEventingComponent()
-	if err != nil {
-		return err
-	}
+	//err = InstallKnativeEventingComponent()
+	//if err != nil {
+	//	return err
+	//}
+	//
+	//// Logs for verification
+	//_, err = utils.ExecShellCmd("kubectl get pods -n knative-eventing")
+	//if !utils.CheckErrorWithMsg(err, "Verification Failed!") {
+	//	return err
+	//}
 
-	// Logs for verification
-	_, err = utils.ExecShellCmd("kubectl get pods -n knative-eventing")
-	if !utils.CheckErrorWithMsg(err, "Verification Failed!") {
-		return err
-	}
+	//err = InstallChannelLayer()
+	//if err != nil {
+	//	return err
+	//}
 
-	err = InstallChannelLayer()
-	if err != nil {
-		return err
-	}
-
-	err = InstallBrokerLayer()
-	if err != nil {
-		return err
-	}
+	//err = InstallBrokerLayer()
+	//if err != nil {
+	//	return err
+	//}
 
 	// Logs for verification
 	_, err = utils.ExecShellCmd("kubectl --namespace istio-system get service istio-ingressgateway")
